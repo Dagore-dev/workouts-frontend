@@ -2,6 +2,7 @@ import './styles.css'
 import { useState } from 'react'
 import { API_URL } from '../../config'
 import useWorkoutsContext from '../../hooks/useWorkoutsContext'
+import WorkoutsFormField from '../WorkoutsFormField'
 
 export default function WorkoutsForm (): JSX.Element {
   const [, dispatch] = useWorkoutsContext()
@@ -9,6 +10,7 @@ export default function WorkoutsForm (): JSX.Element {
   const [load, setLoad] = useState('')
   const [repetitions, setRepetitions] = useState('')
   const [error, setError] = useState('')
+  const [emptyFields, setEmptyFields] = useState([])
 
   function handleSubmit (e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault()
@@ -26,20 +28,22 @@ export default function WorkoutsForm (): JSX.Element {
       body: JSON.stringify(workout)
     })
       .then(response => {
-        if (response.ok) {
-          response.json()
-            .then(data => {
+        response.json()
+          .then(data => {
+            if (response.ok) {
               setError('')
+              setEmptyFields([])
               setTitle('')
               setLoad('')
               setRepetitions('')
 
               dispatch({ type: 'CREATE_WORKOUT', payload: [data] })
-            })
-            .catch(error => setError(error.message))
-        } else {
-          throw new Error('Algo fue mal')
-        }
+            } else {
+              setError(data.error)
+              setEmptyFields(data.emptyFields)
+            }
+          })
+          .catch(error => setError(error.message))
       })
       .catch(error => setError(error.message))
   }
@@ -48,30 +52,31 @@ export default function WorkoutsForm (): JSX.Element {
     <form className='create' onSubmit={handleSubmit}>
       <h3>Añade un nuevo ejercicio</h3>
 
-      <label htmlFor='title'>Nombre:</label>
-      <input
+      <WorkoutsFormField
         id='title'
+        label='Nombre'
         type='text'
-        onChange={e => setTitle(e.target.value)}
         value={title}
+        setter={setTitle}
+        emptyFields={emptyFields}
       />
 
-      <label htmlFor='title'>Peso (Kg):</label>
-      <input
-        id='peso'
+      <WorkoutsFormField
+        id='load'
+        label='Peso (Kg)'
         type='number'
-        min={0}
-        onChange={e => setLoad(e.target.value)}
         value={load}
+        setter={setLoad}
+        emptyFields={emptyFields}
       />
 
-      <label htmlFor='repetitions'>Repeticiones:</label>
-      <input
+      <WorkoutsFormField
         id='repetitions'
+        label='Repeticiones'
         type='number'
-        min={1}
-        onChange={e => setRepetitions(e.target.value)}
         value={repetitions}
+        setter={setRepetitions}
+        emptyFields={emptyFields}
       />
 
       <button>Añadir ejercicio</button>
