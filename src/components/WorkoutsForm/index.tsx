@@ -1,8 +1,10 @@
 import './styles.css'
 import { useState } from 'react'
 import { API_URL } from '../../config'
+import useWorkoutsContext from '../../hooks/useWorkoutsContext'
 
 export default function WorkoutsForm (): JSX.Element {
+  const [, dispatch] = useWorkoutsContext()
   const [title, setTitle] = useState('')
   const [load, setLoad] = useState('')
   const [repetitions, setRepetitions] = useState('')
@@ -32,7 +34,7 @@ export default function WorkoutsForm (): JSX.Element {
               setLoad('')
               setRepetitions('')
 
-              console.log(data)
+              dispatch({ type: 'CREATE_WORKOUT', payload: [data] })
             })
             .catch(error => setError(error.message))
         } else {
