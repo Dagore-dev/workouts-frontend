@@ -35,7 +35,7 @@ export default function WorkoutDetails (props: Props): JSX.Element {
 
       <p>{workout.createdAt}</p>
 
-      <span onClick={handleClick}>Borrar</span>
+      <span className='material-symbols-outlined' onClick={handleClick}>delete</span>
     </li>
   )
 }
