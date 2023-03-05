@@ -2,6 +2,7 @@ import './styles.css'
 import IWorkout from '../../interfaces/IWorkout'
 import { API_URL } from '../../config'
 import useWorkoutsContext from '../../hooks/useWorkoutsContext'
+import dateFormatter from '../../utils/dateFormatter'
 
 interface Props {
   workout: IWorkout
@@ -33,7 +34,7 @@ export default function WorkoutDetails (props: Props): JSX.Element {
       <p><strong>Peso (kg): </strong>{workout.load}</p>
       <p><strong>Repeticiones: </strong>{workout.repetitions}</p>
 
-      <p>{workout.createdAt}</p>
+      <p>{dateFormatter(workout.createdAt)}</p>
 
       <span className='material-symbols-outlined' onClick={handleClick}>delete</span>
     </li>
