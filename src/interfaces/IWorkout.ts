@@ -3,4 +3,5 @@ export default interface IWorkout {
   repetitions: number
   load: number
   createdAt: string
+  _id: string
 }

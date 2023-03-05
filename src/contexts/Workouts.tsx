@@ -10,6 +10,8 @@ export function workoutsReducer (state: ICurrentWorkouts, action: IAction): ICur
       return { workouts: action.payload }
     case 'CREATE_WORKOUT':
       return { workouts: [...action.payload, ...state.workouts] }
+    case 'DELETE_WORKOUT':
+      return { workouts: state.workouts.filter(({ _id }) => action.payload.find(workout => workout._id === _id) === undefined) }
     default:
       return state
   }
