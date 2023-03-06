@@ -1,10 +1,10 @@
-import { ReactNode, createContext, useReducer } from 'react'
-import IAction from '../interfaces/IAction'
+import { ReactNode, createContext, useReducer, Dispatch } from 'react'
+import IWorkoutAction from '../interfaces/IWorkoutAction'
 import ICurrentWorkouts from '../interfaces/ICurrentWorkouts'
 
-export const WorkoutsContext = createContext<null | { state: ICurrentWorkouts, dispatch: React.Dispatch<IAction> }>(null)
+export const WorkoutsContext = createContext<null | { workoutsState: ICurrentWorkouts, workoutsDispatch: Dispatch<IWorkoutAction> }>(null)
 
-export function workoutsReducer (state: ICurrentWorkouts, action: IAction): ICurrentWorkouts {
+export function workoutsReducer (state: ICurrentWorkouts, action: IWorkoutAction): ICurrentWorkouts {
   switch (action.type) {
     case 'SET_WORKOUTS':
       return { workouts: action.payload }
@@ -22,12 +22,12 @@ interface Props {
 }
 
 export function WorkoutsContextProvider (props: Props): JSX.Element {
-  const [state, dispatch] = useReducer(workoutsReducer, {
+  const [workoutsState, workoutsDispatch] = useReducer(workoutsReducer, {
     workouts: []
   })
 
   return (
-    <WorkoutsContext.Provider value={{ state, dispatch }}>
+    <WorkoutsContext.Provider value={{ workoutsState, workoutsDispatch }}>
       {props.children}
     </WorkoutsContext.Provider>
   )
