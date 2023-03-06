@@ -13,7 +13,7 @@ export default function WorkoutDetails (props: Props): JSX.Element {
   const [, dispatch] = useWorkoutsContext()
 
   function handleClick (e: React.MouseEvent<HTMLSpanElement, MouseEvent>): void {
-    fetch(`${API_URL}/${workout._id}`, {
+    fetch(`${API_URL}/workouts/${workout._id}`, {
       method: 'DELETE'
     })
       .then(response => {

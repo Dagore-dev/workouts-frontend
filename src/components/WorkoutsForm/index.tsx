@@ -20,7 +20,7 @@ export default function WorkoutsForm (): JSX.Element {
       repetitions: Number(repetitions)
     }
 
-    fetch(API_URL, {
+    fetch(`${API_URL}/workouts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

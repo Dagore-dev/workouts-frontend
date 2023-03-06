@@ -9,7 +9,7 @@ export default function Home (): JSX.Element {
   const [state, dispatch] = useWorkoutsContext()
 
   useEffect(() => {
-    fetch(API_URL)
+    fetch(`${API_URL}/workouts`)
       .then(async response => {
         if (response.ok) {
           return await response.json()
