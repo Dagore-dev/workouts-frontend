@@ -7,3 +7,8 @@ form.signup {
   background-color: #fff;
   border-radius: 4px;
 }
+
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}

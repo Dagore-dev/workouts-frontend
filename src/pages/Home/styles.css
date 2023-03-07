@@ -1,5 +1,19 @@
-.home {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 100px;
+.create {
+  text-align: center;
+}
+
+.create label {
+  text-align: left;
+}
+
+@media screen and (min-width: 750px) {
+  .home {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 100px;
+  }
+
+  .create {
+    text-align: left;
+  }
 }
