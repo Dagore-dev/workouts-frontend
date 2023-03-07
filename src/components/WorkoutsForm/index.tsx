@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { API_URL } from '../../config'
 import useWorkoutsContext from '../../hooks/useWorkoutsContext'
 import WorkoutsFormField from '../WorkoutsFormField'
+import useAuthContext from '../../hooks/useAuthContext'
 
 export default function WorkoutsForm (): JSX.Element {
   const [, dispatch] = useWorkoutsContext()
@@ -11,6 +12,7 @@ export default function WorkoutsForm (): JSX.Element {
   const [repetitions, setRepetitions] = useState('')
   const [error, setError] = useState('')
   const [emptyFields, setEmptyFields] = useState([])
+  const [authState] = useAuthContext()
 
   function handleSubmit (e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault()
@@ -20,32 +22,37 @@ export default function WorkoutsForm (): JSX.Element {
       repetitions: Number(repetitions)
     }
 
-    fetch(`${API_URL}/workouts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(workout)
-    })
-      .then(response => {
-        response.json()
-          .then(data => {
-            if (response.ok) {
-              setError('')
-              setEmptyFields([])
-              setTitle('')
-              setLoad('')
-              setRepetitions('')
-
-              dispatch({ type: 'CREATE_WORKOUT', payload: [data] })
-            } else {
-              setError(data.error)
-              setEmptyFields(data.emptyFields)
-            }
-          })
-          .catch(error => setError(error.message))
+    if (authState.user != null) {
+      fetch(`${API_URL}/workouts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authState.user.token}`
+        },
+        body: JSON.stringify(workout)
       })
-      .catch(error => setError(error.message))
+        .then(response => {
+          response.json()
+            .then(data => {
+              if (response.ok) {
+                setError('')
+                setEmptyFields([])
+                setTitle('')
+                setLoad('')
+                setRepetitions('')
+
+                dispatch({ type: 'CREATE_WORKOUT', payload: [data] })
+              } else {
+                setError(data.error)
+                setEmptyFields(data.emptyFields)
+              }
+            })
+            .catch(error => setError(error.message))
+        })
+        .catch(error => setError(error.message))
+    } else {
+      setError('Necesitas iniciar sesión.')
+    }
   }
 
   return (

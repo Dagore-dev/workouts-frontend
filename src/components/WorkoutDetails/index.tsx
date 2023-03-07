@@ -3,6 +3,7 @@ import IWorkout from '../../interfaces/IWorkout'
 import { API_URL } from '../../config'
 import useWorkoutsContext from '../../hooks/useWorkoutsContext'
 import dateFormatter from '../../utils/dateFormatter'
+import useAuthContext from '../../hooks/useAuthContext'
 
 interface Props {
   workout: IWorkout
@@ -11,21 +12,27 @@ interface Props {
 export default function WorkoutDetails (props: Props): JSX.Element {
   const { workout } = props
   const [, dispatch] = useWorkoutsContext()
+  const [authState] = useAuthContext()
 
   function handleClick (e: React.MouseEvent<HTMLSpanElement, MouseEvent>): void {
-    fetch(`${API_URL}/workouts/${workout._id}`, {
-      method: 'DELETE'
-    })
-      .then(response => {
-        if (response.ok) {
-          response.json()
-            .then(data => dispatch({ type: 'DELETE_WORKOUT', payload: [data] }))
-            .catch(console.error)
-        } else {
-          throw new Error('Algo ha ido mal')
+    if (authState.user != null) {
+      fetch(`${API_URL}/workouts/${workout._id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${authState.user.token}`
         }
       })
-      .catch(console.error)
+        .then(response => {
+          if (response.ok) {
+            response.json()
+              .then(data => dispatch({ type: 'DELETE_WORKOUT', payload: [data] }))
+              .catch(console.error)
+          } else {
+            throw new Error('Algo ha ido mal')
+          }
+        })
+        .catch(console.error)
+    }
   }
 
   return (
