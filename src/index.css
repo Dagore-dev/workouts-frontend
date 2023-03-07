@@ -1,6 +1,7 @@
 :root {
   --primary: #1aac83;
   --error: #e7195a;
+  --header-height: 100px;
 }
 
 body {
